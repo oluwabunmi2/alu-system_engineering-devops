@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-#setting up load balancing
-sudo apt update -y
-sudo apt install haproxy -y
-echo 'ENABLED=1' | sudo tee -a /etc/default/haproxy
-printf %s 'backend web-backend
-        balance roundrobin
-        server 4826-web-01 52.91.59.143:80 check
-        server 4826-web-02 54.90.160.55:80 check
-frontend http
-        bind *:80
-        mode http
-        default_backend web-backend
-' | sudo tee -a /etc/haproxy/haproxy.cfg
-sudo service haproxy restart
+# custom header
+REDIR="\\\tlocation /redirect_me {\n\t\t return 301 https://onepiece.fandom.com/wiki/One_Piece_Wiki;\n\t}\n"
+ERRDIR="\\\n\terror_page 404 /custom_404.html;\n\tlocation = /custom_404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}\n"
+SRC="/etc/nginx/sites-enabled/default"
+HEADER="\\\n\tadd_header X-Served-By \$HOSTNAME;\n"
+apt-get -y update
+apt-get -y install nginx
+sudo service nginx start
+echo "Holberton School" | sudo tee /var/www/html/index.nginx-debian.html
+sudo sed -i "30i $REDIR" $SRC
+sudo sed -i "28i $HEADER" $SRC
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
+sudo sed -i "48i $ERRDIR" $SRC
+sudo service nginx restart
