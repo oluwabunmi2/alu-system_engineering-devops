@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# what's keeping your ubuntu
+#container's Nginx installation from listening on port 80
+
+# Nginx to run and listen to port 80
+
+service nginx restart
