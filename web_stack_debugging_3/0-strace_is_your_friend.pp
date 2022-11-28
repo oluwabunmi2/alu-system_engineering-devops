@@ -1,6 +1,6 @@
-# Apache returns 500; fix the error and automate it using puppet code
+# Apache returns 500; use this script to fix typo in config
 
-exec { 'change':
-  command => 'sed -i "s/phpp/php/g" /var/www/html/wp-settings.php',
-  provider => shell,
+exec { 'fix config typo':
+  command => "sed -i 's/.phpp/.php/' /var/www/html/wp-settings.php",
+  path    => shell,
 }
